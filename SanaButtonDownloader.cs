@@ -21,14 +21,13 @@ namespace SanaButtonDownloader
 				Console.WriteLine("更新はありません。");
 				return;
 			}
-			Console.Write("OutputDirectory; ");
+			Console.Write("OutputDirectory: ");
 			var output = Console.ReadLine();
+			//どうせボタンしか取得しないからこれでなんとかなる
 			var re = new Regex(@"<button type=""button"" class=""sounds"" data-file=""(.+?)"">.+?</button>");
 			foreach (var item in re.Matches(html).Cast<Match>().Select(i => i.Groups.Cast<Group>().ElementAt(1).Value))
 			{
 				Process(item, output);
-				Console.WriteLine("1回やりました");
-				return;
 			}
 		}
 
@@ -37,6 +36,7 @@ namespace SanaButtonDownloader
 			var wc = new WebClient();
 			var target = $"{targetDir}\\{fileName}.mp3";
 			if (File.Exists(target)) return;
+			//このままだと階層が2段以上になると死亡
 			if (fileName.Contains("/")) Directory.CreateDirectory(targetDir + "\\" + fileName.Split('/')[0]);
 			wc.DownloadFile(soundRoot + fileName+".mp3", target);
 		}
@@ -46,6 +46,7 @@ namespace SanaButtonDownloader
 			if (File.Exists("LastUpdate.txt"))
 			{
 				var date = File.ReadAllText("LastUpdate.txt");
+				//エクストリームガバガバ更新確認
 				var dateReg = new Regex(@"\d?\d/\d?\d");
 				if (dateReg.Match(html).Value == date) return false;
 				Console.WriteLine("更新を確認しました。");
