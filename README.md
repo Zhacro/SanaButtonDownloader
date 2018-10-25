@@ -1,0 +1,2 @@
+# SanaButtonDownloader
+さなボタン(2)のサーバーからmp3ファイルを一括ダウンロードするやつ
